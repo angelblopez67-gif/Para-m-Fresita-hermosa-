@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080817">
+  <title>Para mi Fresita ❤️</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --pink:#ff9fca; --lilac:#c8b5ff; --night:#080817; --cream:#fff4fa; }
+    * { box-sizing:border-box; }
+    html,body { margin:0; min-height:100%; background:var(--night); color:var(--cream); font-family:"Quicksand",sans-serif; }
+    body { overflow-x:hidden; }
+    button { font:inherit; cursor:pointer; }
+    .screen {
+      min-height:100svh; width:100%; display:none; position:relative; overflow:hidden;
+      padding:clamp(22px,5vw,56px) 18px; align-items:center; justify-content:center;
+      background:radial-gradient(ellipse at 50% 110%,#30204c 0%,#111027 42%,#070714 100%);
+    }
+    .screen.active { display:flex; animation:appear .8s ease both; }
+    @keyframes appear { from{opacity:0; transform:translateY(10px)} to{opacity:1;transform:none} }
+    .content { width:min(850px,100%); text-align:center; position:relative; z-index:2; }
+    h1,h2,.script { font-family:"Caveat",cursive; font-weight:600; }
+    h1 { font-size:clamp(3.1rem,10vw,6.5rem); line-height:1; margin:0 0 18px; color:#ffd2e8; text-shadow:0 0 24px #ff91c777; }
+    h2 { font-size:clamp(2.4rem,7vw,4.2rem); color:#ffd2e8; margin:0 0 12px; }
+    p { line-height:1.8; }
+    .lead { font-size:clamp(1rem,2.5vw,1.2rem); max-width:650px; margin:0 auto 28px; color:#f8eaf5; }
+    .btn {
+      border:1px solid #ffd1e8aa; border-radius:999px; padding:13px 25px; color:#24152b;
+      background:linear-gradient(135deg,#ffd2e8,#d8c6ff); font-weight:700;
+      box-shadow:0 8px 28px #e89bc544; transition:transform .2s, box-shadow .2s;
+    }
+    .btn:hover { transform:translateY(-3px); box-shadow:0 12px 35px #e89bc577; }
+    .btn.secondary { background:#ffffff12; color:#ffeaf5; }
+    .actions { display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin-top:26px; }
+    .stars-bg,.stars-bg::before,.stars-bg::after {
+      position:absolute; inset:0; pointer-events:none; content:""; background-repeat:repeat;
+      background-image:radial-gradient(2px 2px at 20px 30px,#fff 60%,transparent),
+        radial-gradient(1px 1px at 90px 80px,#fff 60%,transparent),
+        radial-gradient(1.5px 1.5px at 150px 140px,#ffd5eb 60%,transparent);
+      background-size:210px 190px; opacity:.55; animation:twinkle 5s ease-in-out infinite alternate;
+    }
+    .stars-bg::before { transform:translate(70px,40px); opacity:.35; animation-delay:-2s; }
+    .stars-bg::after { transform:translate(-40px,90px); opacity:.25; animation-delay:-4s; }
+    @keyframes twinkle { from{opacity:.2} to{opacity:.8} }
+    .moon { position:absolute; top:9%; right:12%; width:76px; height:76px; border-radius:50%; background:#fff0c9; box-shadow:0 0 45px #fff0c988; }
+    .moon:after { content:""; position:absolute; width:70px;height:70px;left:22px;top:-9px;border-radius:50%;background:#111027; }
+    .garden { min-height:330px; position:relative; margin:12px auto 24px; display:grid; place-items:center; }
+    .bouquet { font-size:clamp(5rem,17vw,9rem); filter:drop-shadow(0 0 20px #ffb5d855); animation:float 4s ease-in-out infinite; }
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+    .flower { position:absolute; font-size:clamp(1.5rem,4vw,2.4rem); animation:sway 3s ease-in-out infinite alternate; }
+    .f1{left:15%;top:20%}.f2{right:16%;top:18%;animation-delay:-1s}.f3{left:24%;bottom:10%;animation-delay:-2s}.f4{right:22%;bottom:8%;animation-delay:-.5s}
+    @keyframes sway { to{transform:rotate(14deg) translateY(-8px)} }
+    .garden-note { color:#ffe6f3; font-family:"Caveat",cursive; font-size:clamp(1.7rem,5vw,2.5rem); }
+    .sky-stars { display:flex; flex-wrap:wrap; justify-content:center; gap:clamp(18px,5vw,42px); margin:38px auto; max-width:650px; }
+    .star { border:0; background:transparent; color:#fff3c4; font-size:clamp(2.2rem,7vw,3.6rem); text-shadow:0 0 18px #fff0a8; animation:starPulse 2s infinite alternate; }
+    .star:nth-child(even){animation-delay:-1s}
+    @keyframes starPulse { to{transform:scale(1.22);filter:brightness(1.5)} }
+    .hint { color:#d8c9e8; font-size:.92rem; }
+    .popup {
+      display:none; position:fixed; inset:0; z-index:20; background:#050510c9;
+      align-items:center; justify-content:center; padding:22px;
+    }
+    .popup.show { display:flex; }
+    .popup-card { width:min(480px,100%); padding:28px; border:1px solid #ffd2e877; border-radius:22px; background:linear-gradient(145deg,#29203d,#111126); box-shadow:0 0 50px #ffadd533; }
+    .popup-card p { margin:0 0 20px; }
+    .letter-card {
+      text-align:left; max-height:min(68svh,720px); overflow:auto; padding:clamp(20px,4vw,38px);
+      border:1px solid #ffd3e855; border-radius:22px; background:#fff9ff0c;
+      box-shadow:0 0 45px #eaa9d51c; scrollbar-color:#d9a9cb #211a32;
+    }
+    .letter-card p { margin:0 0 17px; font-size:clamp(.95rem,2.3vw,1.06rem); line-height:1.85; color:#fff1f8; }
+    .letter-card .signoff { text-align:center; font-family:"Caveat",cursive; font-size:clamp(1.6rem,4vw,2.1rem); color:#ffd2e8; margin-top:22px; }
+    .count-number { font-family:"Caveat",cursive; font-size:clamp(7rem,25vw,13rem); line-height:1; color:#ffe1f0; text-shadow:0 0 40px #ff9fcaaa; animation:countPop .85s ease both; }
+    @keyframes countPop { from{transform:scale(.3);opacity:0} to{transform:scale(1);opacity:1} }
+    .final-title { font-family:"Caveat",cursive; font-size:clamp(2.6rem,8vw,5rem); color:#ffd5e9; margin-bottom:10px; }
+    #constellation { width:min(720px,95vw); height:clamp(220px,48vw,360px); display:block; margin:0 auto; overflow:visible; }
+    .constellation-line { stroke:#fbd8f1; stroke-width:1.7; opacity:.65; filter:drop-shadow(0 0 5px #ffb4e8); }
+    .constellation-dot { fill:#fff5c9; filter:drop-shadow(0 0 8px #fff0a8); }
+    .constellation-letter { fill:#ffe1f1; font:600 19px "Quicksand",sans-serif; text-anchor:middle; }
+    .final-message { font-family:"Caveat",cursive; font-size:clamp(1.8rem,5vw,2.7rem); color:#ffe1ef; }
+    .shooting-star { position:absolute; width:120px;height:2px; background:linear-gradient(90deg,transparent,#fff,#ffc7e5,transparent); top:28%;left:-150px; transform:rotate(-25deg); opacity:0; }
+    .shooting-star.go { animation:shoot 1.5s ease-out forwards; }
+    @keyframes shoot { 0%{left:-150px;top:60%;opacity:0} 15%{opacity:1} 100%{left:110%;top:10%;opacity:0} }
+    .heart { position:fixed; pointer-events:none; z-index:3; animation:heartRise 5s linear forwards; opacity:.8; }
+    @keyframes heartRise { from{transform:translateY(0) scale(.7);opacity:0} 15%{opacity:.8} to{transform:translateY(-110vh) scale(1.4);opacity:0} }
+    @media(max-width:520px) { .screen{padding:28px 16px}.garden{min-height:270px}.f1{left:5%}.f2{right:5%}.f3{left:10%}.f4{right:10%} }
+    @media(prefers-reduced-motion:reduce) { *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important} }
+  </style>
+</head>
+<body>
+  <section id="welcome" class="screen active">
+    <div class="stars-bg"></div><div class="moon"></div>
+    <main class="content">
+      <div style="font-size:3rem;margin-bottom:12px">💗</div>
+      <h1>¡Hola, mi Fresita!</h1>
+      <p class="lead">Preparé algo especial para ti, porque este primer mes contigo merece un pequeño universo lleno de amor.</p>
+      <button class="btn" onclick="goTo('garden')">Abre tu regalo ✨</button>
+    </main>
+  </section>
+
+  <section id="garden" class="screen">
+    <div class="stars-bg"></div><div class="moon"></div>
+    <main class="content">
+      <h2>Un pequeño jardín para ti</h2>
+      <p class="lead">Si pudiera regalarte flores cada vez que pienso en ti, tendrías el jardín más bonito del mundo.</p>
+      <div class="garden" aria-label="Un ramo de flores">
+        <span class="flower f1">🌸</span><span class="flower f2">🌷</span>
+        <span class="flower f3">🌹</span><span class="flower f4">🌼</span>
+        <div class="bouquet">💐</div>
+      </div>
+      <p class="garden-note">Para mi Fresita, con todo mi cariño ❤️</p>
+      <button class="btn" onclick="goTo('sky')">Mira el cielo conmigo ✨</button>
+    </main>
+  </section>
+
+  <section id="sky" class="screen">
+    <div class="stars-bg"></div><div class="moon"></div>
+    <div class="shooting-star" id="shootingStar"></div>
+    <main class="content">
+      <h2>Hay estrellas que me recuerdan a ti</h2>
+      <p class="lead">Toca las estrellitas; cada una guarda algo que quiero decirte.</p>
+      <div class="sky-stars">
+        <button class="star" aria-label="Estrella uno" onclick="showNote(0)">✦</button>
+        <button class="star" aria-label="Estrella dos" onclick="showNote(1)">✧</button>
+        <button class="star" aria-label="Estrella tres" onclick="showNote(2)">✦</button>
+        <button class="star" aria-label="Estrella cuatro" onclick="showNote(3)">✧</button>
+        <button class="star" aria-label="Estrella fugaz" onclick="shootingWish()">★</button>
+      </div>
+      <p class="hint">La última estrella tiene una sorpresa especial.</p>
+      <div class="actions"><button class="btn" onclick="goTo('letter')">Tengo algo que decirte 💌</button></div>
+    </main>
+  </section>
+
+  <section id="letter" class="screen">
+    <div class="stars-bg"></div>
+    <main class="content">
+      <h2>Una carta para mi Fresita</h2>
+      <div class="letter-card">
+        <p><strong>Feliz primer mes, mi Fresita ❤️😸</strong></p>
+        <p>En serio, no me canso de pensar en lo rápido que pasó este mes y en lo mucho que ya significas para mí. Te ganaste mi corazón desde el primer momento en que te vi. Estaba aferrado a ti de una manera que no te imaginas, de esas en las que, si no eras tú, no quería a nadie más y estaba dispuesto a darlo todo por ti. Y mírame ahora: enamorado, obsesionado, loco de amor por ti. Es como si mi corazón ya te estuviera esperando desde antes.</p>
+        <p>Me fascina todo lo que somos cuando estamos juntos. Podemos estar riéndonos a carcajadas de cualquier babosada sin sentido, compartiendo literalmente la misma neurona como dos niños chiquitos, y de pronto mirarte y sentir un amor inmenso, una emoción y una felicidad que no me caben en el pecho. Contigo todo se siente divertido, lleno de amor, bonito y real. Me das una paz que de verdad me hace bien y me hace querer esforzarme y ser mejor cada día.</p>
+        <p>Me tienes completamente enamorado de tu forma de ser, de tus ocurrencias, de tu risa, de cómo expresas tu manera de amar, de tus expresiones y de lo hermosa y perfecta que te ves hasta con lo más sencillo. Me enamora cada detalle que haces sin darte cuenta.</p>
+        <p>Sé que apenas llevamos un mes y que vamos paso a paso, pero desde ahorita te lo digo con todo el corazón: quiero que te quedes. Te quiero en mis días buenos, en los difíciles, en los planes grandes y en los más simples, y quiero quedarme en los tuyos para poder apoyarte, protegerte, cuidarte y, sobre todo, amarte. Sí o sí, me sueño llegando contigo a ese punto de casarnos, construir un hogar y seguir riéndonos de las mismas tonterías cuando ya estemos viejitos.</p>
+        <p>Gracias por regalarme este primer mes tan bonito, por hacerme sentir tan feliz y por dejarme entrar a tu vida. En verdad, como te dije, me salvaste, y agradezco al destino, a Dios, a quien sea o a lo que sea, por haberte encontrado. Ya no me imagino una vida sin ti ni sin estos momentos tan bonitos que pasamos juntos.</p>
+        <p>Siempre, mi Fresita, voy a estar para ti, sea el momento que sea. Hasta para la más mínima cosa quiero que me busques, que pienses en mí y que recuerdes que tienes un gran apoyo: el de tu novio. Jamás, jamás te dejaré sola. Como te lo dije, ya llegué para quedarme y para poder, algún día, llamarte mi esposa.</p>
+        <p>Mi manera de agradecerte todo lo que haces por mí es dándote ánimos y haciéndote ver lo mucho, muchísimo que vales y la gran mujer en la que te vas a convertir. Yo quiero estar ahí, a tu lado. Me quedan aún muchos años para seguirte diciendo y expresando todo mi amor.</p>
+        <p>Gracias por todo, gracias por dejarme entrar a tu vida y por contarme esas historias tan bonitas. Jamás dejaré de agradecértelo. Y también te lo agradeceré ayudándote a sanar, así como tú me ayudas a mí. Como te lo dije, juntos podemos hacer todo, pero siempre juntos, luchando por lo que queremos y expresándonos entre nosotros lo que sentimos y lo mucho que nos necesitamos el uno al otro.</p>
+        <p>Así que jamás olvides que tienes a alguien que está orgulloso de ti, que no te cambiaría nada, que te ve con ojos de amor y que jamás, jamás, jamás te dejará sola.</p>
+        <p>Muchas gracias por todo, Fernanda, o como yo te digo: ¡mi Fresitalinda, hermosa, preciosaaaaaaaaaaaa, lindísima, bonita, espectacular y grandiosa! ❤️🥹</p>
+        <p class="signoff">Feliz primer mes, mi Fresita. Te amo con todo mi corazón.<br>Te ama tu chefsito 😸</p>
+      </div>
+      <div class="actions"><button class="btn" onclick="goTo('countdown')">Hay algo más… ✨</button></div>
+    </main>
+  </section>
+
+  <section id="countdown" class="screen">
+    <div class="stars-bg"></div>
+    <main class="content">
+      <h2>Una última sorpresa</h2>
+      <p class="lead">Cuenta conmigo…</p>
+      <div class="count-number" id="countNumber">10</div>
+      <p class="lead" id="countCaption">Cada segundo contigo vale muchísimo ❤️</p>
+    </main>
+  </section>
+
+  <section id="final" class="screen">
+    <div class="stars-bg"></div><div class="moon"></div>
+    <main class="content">
+      <div class="final-title">Esta es mi constelación favorita</div>
+      <p class="lead">Porque hasta el cielo tiene una forma de escribir tu nombre.</p>
+      <svg id="constellation" viewBox="0 0 700 300" role="img" aria-label="Constelación que forma el nombre Fernanda">
+        <g id="constellationLines"></g><g id="constellationDots"></g><g id="constellationLetters"></g>
+      </svg>
+      <p class="final-message">FERNANDA ❤️</p>
+      <p class="lead">Mi estrella favorita, hoy y siempre.</p>
+      <button class="btn secondary" onclick="goTo('welcome')">Volver al inicio ↺</button>
+    </main>
+  </section>
+
+  <div class="popup" id="notePopup" role="dialog" aria-modal="true" aria-labelledby="popupText">
+    <div class="popup-card">
+      <p id="popupText" class="script" style="font-size:1.8rem;color:#ffe0ef"></p>
+      <button class="btn" onclick="closeNote()">Guardar en mi corazón ❤️</button>
+    </div>
+  </div>
+
+  <audio id="bgMusic" loop preload="auto">
+    <source src="Tu Aprendiz - José y el Toro.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    const notes = [
+      "Desde que llegaste, mis días tienen una luz diferente. ❤️",
+      "Tu risa es de mis sonidos favoritos en este mundo. 😸",
+      "No necesito un cielo lleno de estrellas; me basta con tenerte a ti.",
+      "Gracias por ser tú, por tus ocurrencias y por cada momento juntos. 💗"
+    ];
+
+    function goTo(id) {
+      document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+      const target = document.getElementById(id);
+      if (target) target.classList.add("active");
+      if (id === "final") {
+        drawConstellation();
+        playFinalMusic();
+        makeHearts();
+      }
+      if (id === "countdown") startCountdown();
+      window.scrollTo({ top:0, behavior:"smooth" });
+    }
+
+    function showNote(index) {
+      document.getElementById("popupText").textContent = notes[index];
+      document.getElementById("notePopup").classList.add("show");
+    }
+    function closeNote() { document.getElementById("notePopup").classList.remove("show"); }
+
+    function shootingWish() {
+      const star = document.getElementById("shootingStar");
+      star.classList.remove("go");
+      void star.offsetWidth;
+      star.classList.add("go");
+      document.getElementById("popupText").textContent = "Mi deseo siempre será seguir construyendo muchos recuerdos bonitos contigo. ❤️";
+      setTimeout(() => document.getElementById("notePopup").classList.add("show"), 450);
+    }
+
+    let countdownTimer = null;
+    function startCountdown() {
+      if (countdownTimer) clearInterval(countdownTimer);
+      let n = 10;
+      const number = document.getElementById("countNumber");
+      const caption = document.getElementById("countCaption");
+      number.textContent = n;
+      number.style.animation = "none"; void number.offsetWidth; number.style.animation = "";
+      countdownTimer = setInterval(() => {
+        n--;
+        if (n > 0) {
+          number.textContent = n;
+          number.style.animation = "none"; void number.offsetWidth; number.style.animation = "";
+        } else {
+          clearInterval(countdownTimer);
+          caption.textContent = "Y mi sorpresa es…";
+          setTimeout(() => goTo("final"), 1100);
+        }
+      }, 850);
+    }
+
+    function drawConstellation() {
+      const letters = "FERNANDA".split("");
+      const positions = letters.map((_,i) => ({ x:70 + i*80, y: i%2===0 ? 112 : 165 }));
+      const lines = document.getElementById("constellationLines");
+      const dots = document.getElementById("constellationDots");
+      const labels = document.getElementById("constellationLetters");
+      if (labels.childElementCount) return;
+      positions.forEach((p,i) => {
+        if (i > 0) {
+          const prev = positions[i-1];
+          const line = document.createElementNS("http://www.w3.org/2000/svg","line");
+          line.setAttribute("x1",prev.x); line.setAttribute("y1",prev.y);
+          line.setAttribute("x2",p.x); line.setAttribute("y2",p.y);
+          line.setAttribute("class","constellation-line");
+          lines.appendChild(line);
+        }
+        const dot = document.createElementNS("http://www.w3.org/2000/svg","circle");
+        dot.setAttribute("cx",p.x); dot.setAttribute("cy",p.y); dot.setAttribute("r","5");
+        dot.setAttribute("class","constellation-dot"); dots.appendChild(dot);
+        const label = document.createElementNS("http://www.w3.org/2000/svg","text");
+        label.setAttribute("x",p.x); label.setAttribute("y",p.y+36);
+        label.setAttribute("class","constellation-letter"); label.textContent=letters[i];
+        labels.appendChild(label);
+      });
+      // Pequeñas estrellas decorativas alrededor del nombre.
+      [[110,55],[300,55],[510,65],[640,220],[210,235],[440,245]].forEach(([x,y]) => {
+        const dot = document.createElementNS("http://www.w3.org/2000/svg","circle");
+        dot.setAttribute("cx",x); dot.setAttribute("cy",y); dot.setAttribute("r","2.5");
+        dot.setAttribute("class","constellation-dot"); dots.appendChild(dot);
+      });
+    }
+
+    function playFinalMusic() {
+      const audio = document.getElementById("bgMusic");
+      if (!audio) return;
+      audio.volume = 0.55;
+      const attempt = audio.play();
+      if (attempt && typeof attempt.catch === "function") attempt.catch(() => {
+        // Algunos navegadores requieren que la persona inicie el audio manualmente.
+      });
+    }
+
+    function makeHearts() {
+      for (let i=0;i<12;i++) {
+        setTimeout(() => {
+          const heart = document.createElement("span");
+          heart.className = "heart";
+          heart.textContent = ["💗","💕","✨","❤️"][Math.floor(Math.random()*4)];
+          heart.style.left = Math.random()*100+"vw";
+          heart.style.bottom = "-30px";
+          heart.style.fontSize = (16+Math.random()*18)+"px";
+          document.body.appendChild(heart);
+          setTimeout(() => heart.remove(),5200);
+        },i*260);
+      }
+    }
+
+    document.addEventListener("keydown", e => {
+      if (e.key === "Escape") closeNote();
+    });
+    document.getElementById("notePopup").addEventListener("click", e => {
+      if (e.target.id === "notePopup") closeNote();
+    });
+  </script>
+</body>
+</html>
